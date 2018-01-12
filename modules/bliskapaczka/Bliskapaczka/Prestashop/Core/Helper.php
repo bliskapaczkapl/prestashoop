@@ -244,7 +244,7 @@ class Helper
      * @param string $phoneNumber
      * @return string
      */
-    public function telephoneNumberCeaning($phoneNumber)
+    public function telephoneNumberCleaning($phoneNumber)
     {
         $phoneNumber = preg_replace("/[^0-9]/", "", $phoneNumber);
 

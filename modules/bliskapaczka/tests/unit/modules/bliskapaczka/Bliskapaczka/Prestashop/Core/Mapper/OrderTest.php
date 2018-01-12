@@ -17,6 +17,16 @@ class OrderTest extends TestCase
         $this->operatorName = 'INPOST';
         $this->destinationCode = 'KRA010';
 
+        $this->senderEmail = 'jozek.bliskopaczkowy@sendit.pl';
+        $this->senderFirstName = 'Józek';
+        $this->senderLastName = 'Bliskopaczkowy';
+        $this->senderPhoneNumber = '504 435 665';
+        $this->senderStreet = 'Ulicowa';
+        $this->senderBuildingNumber = '33b';
+        $this->senderFlatNumber = '11';
+        $this->senderPostCode = '55-100';
+        $this->senderCity = 'Miastowe';
+
         $this->addressMock = $this->getMockBuilder(\Address::class)
                                     ->disableOriginalConstructor()
                                     ->disableOriginalClone()
@@ -58,7 +68,7 @@ class OrderTest extends TestCase
                                      ->setMethods(
                                          array(
                                              'getParcelDimensions',
-                                             'telephoneNumberCeaning'
+                                             'telephoneNumberCleaning'
                                          )
                                      )
                                      ->getMock();
@@ -70,10 +80,16 @@ class OrderTest extends TestCase
             "weight" => 1
         );
 
+        $phoneMap = [
+            ['504 445 665', '504445665'],
+            ['504 435 665', '504435665']
+        ];
+
         $this->helperMock->method('getParcelDimensions')->will($this->returnValue($dimensions));
-        $this->helperMock->method('telephoneNumberCeaning')
-            ->with($this->equalTo('504 445 665'))
-            ->will($this->returnValue('504445665'));
+        $this->helperMock->method('telephoneNumberCleaning')
+            ->will($this->returnValueMap($phoneMap));
+
+        $this->configurationPseudoMock = new \Configuration();
     }
 
     public function testClassExists()
@@ -84,7 +100,13 @@ class OrderTest extends TestCase
     public function testTypeOfReturnedData()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertTrue(is_array($data));
     }
@@ -92,7 +114,13 @@ class OrderTest extends TestCase
     public function testMapperForReceiverFirstName()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals($this->receiverFirstName, $data['receiverFirstName']);
     }
@@ -100,7 +128,13 @@ class OrderTest extends TestCase
     public function testMapperForReceiverLastName()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals($this->receiverLastName, $data['receiverLastName']);
     }
@@ -108,7 +142,13 @@ class OrderTest extends TestCase
     public function testMapperForReceiverPhoneNumber()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals('504445665', $data['receiverPhoneNumber']);
     }
@@ -116,7 +156,13 @@ class OrderTest extends TestCase
     public function testMapperForReceiverEmail()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals($this->receiverEmail, $data['receiverEmail']);
     }
@@ -124,7 +170,13 @@ class OrderTest extends TestCase
     public function testMapperForOperatorName()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals($this->operatorName, $data['operatorName']);
     }
@@ -132,7 +184,13 @@ class OrderTest extends TestCase
     public function testMapperForDestinationCode()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertEquals($this->destinationCode, $data['destinationCode']);
     }
@@ -140,8 +198,36 @@ class OrderTest extends TestCase
     public function testMapperForParcel()
     {
         $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($this->orderMock, $this->addressMock, $this->customerMock, $this->helperMock);
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
 
         $this->assertTrue(is_array($data['parcel']));
+    }
+
+    public function testMapperForSenderData()
+    {
+        $mapper = new \Bliskapaczka\Prestashop\Core\Mapper\Order();
+        $data = $mapper->getData(
+            $this->orderMock,
+            $this->addressMock,
+            $this->customerMock,
+            $this->helperMock,
+            $this->configurationPseudoMock
+        );
+
+        $this->assertEquals($this->senderEmail, $data['senderEmail']);
+        $this->assertEquals($this->senderFirstName, $data['senderFirstName']);
+        $this->assertEquals($this->senderLastName, $data['senderLastName']);
+        $this->assertEquals('504435665', $data['senderPhoneNumber']);
+        $this->assertEquals($this->senderStreet, $data['senderStreet']);
+        $this->assertEquals($this->senderBuildingNumber, $data['senderBuildingNumber']);
+        $this->assertEquals($this->senderFlatNumber, $data['senderFlatNumber']);
+        $this->assertEquals($this->senderPostCode, $data['senderPostCode']);
+        $this->assertEquals($this->senderCity, $data['senderCity']);
     }
 }

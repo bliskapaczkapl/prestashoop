@@ -13,15 +13,16 @@ class Order
      * @param Address $shippingAddress
      * @param Customer $customer
      * @param Bliskapaczka\Prestashop\Core\Helper $helper
+     * @param \Configuration $configuration
      * @return array
      */
-    public function getData($order, $shippingAddress, $customer, $helper)
+    public function getData($order, $shippingAddress, $customer, $helper, $configuration)
     {
         $data = [];
 
         $data['receiverFirstName'] = $shippingAddress->firstname;
         $data['receiverLastName'] = $shippingAddress->lastname;
-        $data['receiverPhoneNumber'] = $helper->telephoneNumberCeaning($shippingAddress->phone_mobile);
+        $data['receiverPhoneNumber'] = $helper->telephoneNumberCleaning($shippingAddress->phone_mobile);
         $data['receiverEmail'] = $customer->email;
 
         $data['operatorName'] = $order->pos_operator;
@@ -31,7 +32,7 @@ class Order
             'dimensions' => $this->getParcelDimensions($helper)
         ];
 
-        $data = $this->prepareSenderData($data, $helper);
+        $data = $this->prepareSenderData($data, $helper, $configuration);
 
         return $data;
     }
@@ -52,48 +53,49 @@ class Order
      *
      * @param array $data
      * @param \Bliskapaczka\Prestashop\Core\$helper $helper
+     * @param \Configuration $configuration
      * @return array
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function prepareSenderData($data, $helper)
+    public function prepareSenderData($data, $helper, $configuration)
     {
-        if (\Configuration::get($helper::SENDER_EMAIL)) {
-            $data['senderEmail'] = \Configuration::get($helper::SENDER_EMAIL);
+        if ($configuration::get($helper::SENDER_EMAIL)) {
+            $data['senderEmail'] = $configuration::get($helper::SENDER_EMAIL);
         }
 
-        if (\Configuration::get($helper::SENDER_FIRST_NAME)) {
-            $data['senderFirstName'] = \Configuration::get($helper::SENDER_FIRST_NAME);
+        if ($configuration::get($helper::SENDER_FIRST_NAME)) {
+            $data['senderFirstName'] = $configuration::get($helper::SENDER_FIRST_NAME);
         }
 
-        if (\Configuration::get($helper::SENDER_LAST_NAME)) {
-            $data['senderLastName'] = \Configuration::get($helper::SENDER_LAST_NAME);
+        if ($configuration::get($helper::SENDER_LAST_NAME)) {
+            $data['senderLastName'] = $configuration::get($helper::SENDER_LAST_NAME);
         }
 
-        if (\Configuration::get($helper::SENDER_PHONE_NUMBER)) {
-            $data['senderPhoneNumber'] = $helper->telephoneNumberCeaning(
-                \Configuration::get($helper::SENDER_PHONE_NUMBER)
+        if ($configuration::get($helper::SENDER_PHONE_NUMBER)) {
+            $data['senderPhoneNumber'] = $helper->telephoneNumberCleaning(
+                $configuration::get($helper::SENDER_PHONE_NUMBER)
             );
         }
 
-        if (\Configuration::get($helper::SENDER_STREET)) {
-            $data['senderStreet'] = \Configuration::get($helper::SENDER_STREET);
+        if ($configuration::get($helper::SENDER_STREET)) {
+            $data['senderStreet'] = $configuration::get($helper::SENDER_STREET);
         }
 
-        if (\Configuration::get($helper::SENDER_BUILDING_NUMBER)) {
-            $data['senderBuildingNumber'] = \Configuration::get($helper::SENDER_BUILDING_NUMBER);
+        if ($configuration::get($helper::SENDER_BUILDING_NUMBER)) {
+            $data['senderBuildingNumber'] = $configuration::get($helper::SENDER_BUILDING_NUMBER);
         }
 
-        if (\Configuration::get($helper::SENDER_FLAT_NUMBER)) {
-            $data['senderFlatNumber'] = \Configuration::get($helper::SENDER_FLAT_NUMBER);
+        if ($configuration::get($helper::SENDER_FLAT_NUMBER)) {
+            $data['senderFlatNumber'] = $configuration::get($helper::SENDER_FLAT_NUMBER);
         }
 
-        if (\Configuration::get($helper::SENDER_POST_CODE)) {
-            $data['senderPostCode'] = \Configuration::get($helper::SENDER_POST_CODE);
+        if ($configuration::get($helper::SENDER_POST_CODE)) {
+            $data['senderPostCode'] = $configuration::get($helper::SENDER_POST_CODE);
         }
 
-        if (\Configuration::get($helper::SENDER_CITY)) {
-            $data['senderCity'] = \Configuration::get($helper::SENDER_CITY);
+        if ($configuration::get($helper::SENDER_CITY)) {
+            $data['senderCity'] = $configuration::get($helper::SENDER_CITY);
         }
 
         return $data;

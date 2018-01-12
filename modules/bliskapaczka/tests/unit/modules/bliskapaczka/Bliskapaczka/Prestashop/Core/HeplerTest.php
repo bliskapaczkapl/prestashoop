@@ -304,7 +304,7 @@ class HelperTest extends TestCase
     {
         $hepler = new \Bliskapaczka\Prestashop\Core\Helper();
      
-        $this->assertEquals('606606606', $hepler->telephoneNumberCeaning($phoneNumber));
+        $this->assertEquals('606606606', $hepler->telephoneNumberCleaning($phoneNumber));
     }
 
     public function phpneNumbers()

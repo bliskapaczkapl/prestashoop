@@ -162,13 +162,14 @@ class Bliskapaczka extends CarrierModule
 
         $shippingAddress = new \Address((int)$order->id_address_delivery);
         $customer = new \Customer((int)$order->id_customer);
+        $configuration = new \Configuration();
 
         /* @var Bliskapaczka\Prestashop\Core\Helper $bliskapaczkaHelper */
         $bliskapaczkaHelper = new Bliskapaczka\Prestashop\Core\Helper();
 
         /* @var Bliskapaczka\Prestashop\Core\Mapper\Order $mapper */
         $mapper = new Bliskapaczka\Prestashop\Core\Mapper\Order();
-        $data = $mapper->getData($order, $shippingAddress, $customer, $bliskapaczkaHelper);
+        $data = $mapper->getData($order, $shippingAddress, $customer, $bliskapaczkaHelper, $configuration);
 
         /* @var \Bliskapaczka\ApiClient\Bliskapaczka $apiClient */
         $apiClient = $bliskapaczkaHelper->getApiClient();
@@ -235,6 +236,20 @@ class Bliskapaczka extends CarrierModule
      */
     protected function postProcess()
     {
+        $data = array();
+        $data['senderEmail'] = Tools::getValue(Bliskapaczka\Prestashop\Core\Helper::SENDER_EMAIL);
+        $data['senderPhoneNumber'] = Tools::getValue(Bliskapaczka\Prestashop\Core\Helper::SENDER_PHONE_NUMBER);
+        $data['postCode'] = Tools::getValue(Bliskapaczka\Prestashop\Core\Helper::SENDER_POST_CODE);
+
+        // Sender data validation
+        try {
+            $apiValidator = new \Bliskapaczka\ApiClient\Mappers\Order\Validator;
+            Bliskapaczka\Prestashop\Core\Validator::sender($data, $apiValidator);
+        } catch (Exception $e) {
+            $this->html .= $this->displayError($e->getMessage());
+            return;
+        }
+
         if (Tools::isSubmit('btnSubmit')) {
             Configuration::updateValue(
                 Bliskapaczka\Prestashop\Core\Helper::API_KEY,
