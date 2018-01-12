@@ -4,6 +4,7 @@ php:
 
 env:
   - VENDOR_DIR=modules/bliskapaczka/vendor
+  - COMMIT=${TRAVIS_COMMIT::8}
 
 services:
   - docker
@@ -18,10 +19,11 @@ script:
   - $VENDOR_DIR/bin/phpdoccheck --directory=modules --exclude=bliskapaczka/tests,bliskapaczka/vendor
   - $VENDOR_DIR/bin/phploc modules/
   - $VENDOR_DIR/bin/phpunit --bootstrap modules/bliskapaczka/tests/bootstrap.php modules/bliskapaczka/tests/unit/
-  - docker build -t bliskapaczkapl/prestashop .
+  - docker build -t bliskapaczkapl/prestashop:$COMMIT -t bliskapaczkapl/prestashop:latest .
 
 after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker push bliskapaczkapl/prestashop:$COMMIT;
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push bliskapaczkapl/prestashop;
+    docker push bliskapaczkapl/prestashop:latest;
     fi
