@@ -3,8 +3,9 @@ php:
   - '5.6'
 
 env:
-  - VENDOR_DIR=modules/bliskapaczka/vendor
-  - COMMIT=${TRAVIS_COMMIT::8}
+  global:
+    - VENDOR_DIR=modules/bliskapaczka/vendor
+    - COMMIT=${TRAVIS_COMMIT::8}
 
 services:
   - docker
