@@ -4,9 +4,16 @@ php:
   - '7.0'
 
 env:
+- PRESTASHOP_VERSION=1.6.0.x
+- PRESTASHOP_VERSION=1.6.1.x
   global:
     - VENDOR_DIR=modules/bliskapaczka/vendor
     - COMMIT=${TRAVIS_COMMIT::8}
+
+matrix:
+  exclude:
+    - php: 7.0
+      env: PRESTASHOP_VERSION=1.6.0.x
 
 services:
   - docker
@@ -26,10 +33,11 @@ jobs:
   include:
     - stage: build
       script: 
-        - docker build -t bliskapaczkapl/prestashop:$COMMIT -t bliskapaczkapl/prestashop:latest -f dev/docker/Dockerfile .
+        - docker build -t bliskapaczkapl/prestashop:$COMMIT -t bliskapaczkapl/prestashop:latest -f dev/docker/php-5.6/prestashop-1.6.1.x/Dockerfile .
         - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
         - docker push bliskapaczkapl/prestashop:$COMMIT;
       php: 5.6
+      env: PRESTASHOP_VERSION=1.6.1.x
       after_success:
         - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then
           docker push bliskapaczkapl/prestashop:latest;

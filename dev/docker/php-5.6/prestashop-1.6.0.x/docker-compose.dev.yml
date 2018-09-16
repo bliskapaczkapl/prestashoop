@@ -1,0 +1,10 @@
+version: "3"
+services:
+  prestashop:
+    build:
+      context: ../../
+      dockerfile: dev/docker/php-5.6/prestashop-1.6.0.x/Dockerfile
+    volumes:
+      - "./modules/bliskapaczka:/var/www/html/modules/bliskapaczka"
+  db:
+    image: mysql:5.6

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function info {
+    printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
+}
+
 service php5-fpm restart
 
 rm -f /var/run/apache2/apache2.pid
@@ -7,8 +11,10 @@ service apache2 restart
 
 PRESTASHOP_PATH=/var/www/html
 
+info "Sleep 10s, waiting for mysql"
 sleep 10
 
+info "Install PrestaShop"
 php $PRESTASHOP_PATH/install/index_cli.php --domain=$DOMAIN --db_server=$DB_HOST --db_name=$MYSQL_DATABASE \
 	--db_user=$MYSQL_USER --db_password=$MYSQL_PASSWORD 
 

@@ -11,6 +11,8 @@ services:
     environment:
       DB_HOST: db
       DOMAIN: localhost:8080
+    links:
+      - db
   db:
     image: mysql
     ports:
