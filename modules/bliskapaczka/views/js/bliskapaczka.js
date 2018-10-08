@@ -8,9 +8,11 @@ Bliskapaczka.showMap = function (operators, googleMapApiKey, testMode) {
 
     bpWidget = document.getElementById('bpWidget');
     bpWidget.style.display = 'block';
-
+    button = document.getElementById('show-map-button');
+    tr = button.closest('tr');
+    radios = tr.querySelectorAll('input[type=radio]');
+    radios[0].click();
     Bliskapaczka.updateSelectedCarrier();
-
     BPWidget.init(
         bpWidget,
         {

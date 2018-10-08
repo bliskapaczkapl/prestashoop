@@ -4,6 +4,7 @@ use Bliskapaczka\Prestashop\Core\Config;
 
 /**
  * Bliskapaczka shipping module
+ * @SuppressWarnings(PHPMD)
  */
 class Bliskapaczka extends CarrierModule
 {
@@ -141,7 +142,7 @@ class Bliskapaczka extends CarrierModule
             $cart->pos_operator = $posOperator;
             $saveCart = true;
         }
-        
+
         if ($saveCart == true) {
             $cart->save();
         }
@@ -167,7 +168,7 @@ class Bliskapaczka extends CarrierModule
             $order->pos_operator = $cart->pos_operator;
             $saveOrder = true;
         }
-        
+
         if ($saveOrder == true) {
             $order->save();
         }
@@ -419,8 +420,6 @@ class Bliskapaczka extends CarrierModule
      */
     public function renderForm()
     {
-        $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
-
         $fieldsForm = array(
             'form' => array(
                 'legend' => array(

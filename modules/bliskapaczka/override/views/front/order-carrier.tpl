@@ -110,6 +110,7 @@
                                                                 )'
                                                                 href="#bpWidget_wrapper"
                                                                 class="btn btn-default button button-small"
+                                                                id="show-map-button"
                                                             >
                                                             {l s='Select delivery point' mod='bliskapaczka'}
                                                             </a></strong>

@@ -8,10 +8,11 @@ use Bliskapaczka\ApiClient;
  * Bliskapaczka helper
  *
  * @author Mateusz Koszutowski (mkoszutowski@divante.pl)
+ * @SuppressWarnings(PHPMD)
  */
 class Helper
 {
-    const DEFAULT_GOOGLE_API_KEY =  'AIzaSyCUyydNCGhxGi5GIt5z5I-X6hofzptsRjE';
+    const DEFAULT_GOOGLE_API_KEY = 'AIzaSyCUyydNCGhxGi5GIt5z5I-X6hofzptsRjE';
 
     const SIZE_TYPE_FIXED_SIZE_X = 'BLISKAPACZKA_PARCEL_SIZE_TYPE_FIXED_SIZE_X';
     const SIZE_TYPE_FIXED_SIZE_Y = 'BLISKAPACZKA_PARCEL_SIZE_TYPE_FIXED_SIZE_Y';
@@ -39,6 +40,8 @@ class Helper
     const BLISKAPACZKA_TAB_ID = 'BLISKAPACZKA_TAB_ID';
 
     const WIDGET_VERSION = 'v5';
+    const TEST_MODE_ON = 'test';
+    const TEST_MODE_OFF = 'prod';
 
     /**
      * Get parcel dimensions in format accptable by Bliskapaczka API
@@ -193,15 +196,13 @@ class Helper
     public function freeShipping($freeShipping, $cart)
     {
         $option = $this->carrierSettings($cart);
-
+        $bliskapaczkaFreeShipping = true;
         // Ligic coppied from override/views/front/order-carrier.tpl
         if ($option['total_price_with_tax']
             && !$option['is_free']
             && (!isset($freeShipping) || (isset($freeShipping) && !$freeShipping))
         ) {
             $bliskapaczkaFreeShipping = false;
-        } else {
-            $bliskapaczkaFreeShipping = true;
         }
 
         return $bliskapaczkaFreeShipping;
@@ -378,7 +379,7 @@ class Helper
         if (strlen($phoneNumber) > 9) {
             $phoneNumber = preg_replace("/^48/", "", $phoneNumber);
         }
-        
+
         return $phoneNumber;
     }
 
@@ -390,19 +391,15 @@ class Helper
      */
     public function getApiMode($configValue = '')
     {
-        $mode = '';
-
         switch ($configValue) {
             case '1':
-                $mode = 'test';
+                return self::TEST_MODE_ON;
                 break;
 
             default:
-                $mode = 'prod';
+                return self::TEST_MODE_OFF;
                 break;
         }
-
-        return $mode;
     }
 
     /**

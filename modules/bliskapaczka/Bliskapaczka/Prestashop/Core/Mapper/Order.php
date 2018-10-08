@@ -22,7 +22,11 @@ class Order
 
         $data['receiverFirstName'] = $shippingAddress->firstname;
         $data['receiverLastName'] = $shippingAddress->lastname;
-        $data['receiverPhoneNumber'] = $helper->telephoneNumberCleaning($shippingAddress->phone_mobile);
+        if (empty($shippingAddress->phone_mobile)) {
+            $data['receiverPhoneNumber'] = $helper->telephoneNumberCleaning($shippingAddress->phone);
+        } else {
+            $data['receiverPhoneNumber'] = $helper->telephoneNumberCleaning($shippingAddress->phone_mobile);
+        }
         $data['receiverEmail'] = $customer->email;
 
         $data['operatorName'] = $order->pos_operator;
@@ -33,7 +37,6 @@ class Order
         ];
 
         $data = $this->prepareSenderData($data, $helper, $configuration);
-
         return $data;
     }
 
