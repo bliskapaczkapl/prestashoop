@@ -18,7 +18,7 @@ class AdminBliskaOrdersController extends AdminOrdersControllerCore
     public function __construct()
     {
 
-        $this->_where = 'AND number is not null AND number != \'\'';
+        $this->_where = 'AND id_carrier IN (SELECT id_carrier FROM ps_carrier WHERE name = "bliskapaczka" OR name = "bliskapaczka_courier")';
 
         $this->bulk_actions = array(
             'getReport' => array('text' => $this->l('Get Report'), 'icon' => 'icon-download-alt')
