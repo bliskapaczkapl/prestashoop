@@ -40,16 +40,11 @@ class RestWaybillQuery implements WaybillQueryInterface
     {
         $this->apiClient->setOrderId($orderId);
         $response = $this->apiClient->get();
-
-        $decodedResponse = json_decode($response);
-
-        // $properResponse = $decodedResponse instanceof stdClass && !isset($decodedResponse->errors);
-
-        // if (!$properResponse) {
-        //     $message = ($decodedResponse ? current($decodedResponse->errors)->message : '');
-        //     throw new \Exception(sprintf("Bliskapaczka: Error or empty API response %s", $message));
-        // }
-
-        return new WaybillView($decodedResponse->url);
+        try {
+            $decodedResponse = json_decode($response);
+            return new WaybillView($decodedResponse[0]->url);
+        } catch (\Exception $exception) {
+            throw new \Exception("We have a problem with response", 0, $exception);
+        }
     }
 }
