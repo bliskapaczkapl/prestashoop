@@ -123,3 +123,5 @@ $_MODULE['<{bliskapaczka}default-bootstrap>order-carrier_068f80c7519d0528fb08e82
     = 'Produkty';
 $_MODULE['<{bliskapaczka}default-bootstrap>order-carrier_5508a53851720a210e50f7b8a6f66f46']
     = 'Musisz zatwierdzić warunki świadczenia usługi zanim przejdziesz dalej.';
+$_MODULE['<{bliskapaczka}prestashop>adminbliskaorderscontroller_a03e9474c4917e8b342223379ae11231']
+    = 'Zamknij bufor Poczty Polskiej';

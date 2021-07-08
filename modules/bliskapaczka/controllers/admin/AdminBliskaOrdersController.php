@@ -35,6 +35,12 @@ class AdminBliskaOrdersController extends AdminOrdersControllerCore
         AdminController::initPageHeaderToolbar();
 
         unset($this->toolbar_btn['new']);
+        $this->toolbar_btn['close'] = array(
+            'desc' => $this->l('Close buffer'),
+            'href' => AdminController::$currentIndex.'&buffer=1&operatorName=POCZTA'.
+                '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'icon' => 'save'
+        );
     }
 
     /**
@@ -187,6 +193,12 @@ class AdminBliskaOrdersController extends AdminOrdersControllerCore
         } elseif (Tools::isSubmit('bliskaWaybill') && isset($order)) {
             try {
                 $adminController->bliskaWaybillAction();
+            } catch (Exception $exception) {
+                $this->errors[] = Tools::displayError($exception->getMessage());
+            }
+        } elseif (Tools::getValue('buffer') == 1) {
+            try {
+                $adminController->bliskaCloseBufferAction();
             } catch (Exception $exception) {
                 $this->errors[] = Tools::displayError($exception->getMessage());
             }

@@ -13,6 +13,8 @@ use Bliskapaczka\Prestashop\Core\Command\AdviceCommand;
 use Bliskapaczka\Prestashop\Core\Command\AdviceCommandHandler;
 use Bliskapaczka\Prestashop\Core\Command\CancelCommand;
 use Bliskapaczka\Prestashop\Core\Command\CancelCommandHandler;
+use Bliskapaczka\Prestashop\Core\Command\CloseBufferCommand;
+use Bliskapaczka\Prestashop\Core\Command\CloseBufferCommandHandler;
 use Bliskapaczka\Prestashop\Core\Command\CommandBusInterface;
 use Bliskapaczka\Prestashop\Core\Command\UpdateCommand;
 use Bliskapaczka\Prestashop\Core\Command\UpdateCommandHandler;
@@ -61,6 +63,7 @@ class AdminController
         $cancelHandler = new CancelCommandHandler($helper->getApiClientCancel());
         $updateHandler = new UpdateCommandHandler($helper->getApiClientOrder());
         $adviceHandler = new AdviceCommandHandler();
+        $closeBufferHandler = new CloseBufferCommandHandler($helper->getApiClientConfirm());
         $this->commandBus->registerHandler(
             "Bliskapaczka\Prestashop\Core\Command\CancelCommand",
             $cancelHandler
@@ -72,6 +75,10 @@ class AdminController
         $this->commandBus->registerHandler(
             "Bliskapaczka\Prestashop\Core\Command\AdviceCommand",
             $adviceHandler
+        );
+        $this->commandBus->registerHandler(
+            "Bliskapaczka\Prestashop\Core\Command\CloseBufferCommand",
+            $closeBufferHandler
         );
     }
 
@@ -123,5 +130,14 @@ class AdminController
 
         $cancelCommand = new CancelCommand($this->order);
         $this->commandBus->handle($cancelCommand);
+    }
+
+    /**
+     * Action for close buffer PP
+     */
+    public function bliskaCloseBufferAction()
+    {
+        $closeBufferCommand = new CloseBufferCommand($this->order, 'POCZTA');
+        $this->commandBus->handle($closeBufferCommand);
     }
 }

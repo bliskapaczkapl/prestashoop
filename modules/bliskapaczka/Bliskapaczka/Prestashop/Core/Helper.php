@@ -362,6 +362,20 @@ class Helper
 
     /**
      * Get Bliskapaczka API Client
+     * @return ApiClient\Bliskapaczka\Order\Confirm
+     * @throws ApiClient\Exception
+     */
+    public function getApiClientConfirm()
+    {
+        $apiClient = new \Bliskapaczka\ApiClient\Bliskapaczka\Order\Confirm(
+            \Configuration::get(self::API_KEY),
+            $this->getApiMode(\Configuration::get(self::TEST_MODE))
+        );
+        return $apiClient;
+    }
+
+    /**
+     * Get Bliskapaczka API Client
      *
      * @return \Bliskapaczka\ApiClient\Bliskapaczka
      */
